@@ -1,0 +1,7 @@
+__py*
+*.pyc
+.vscode
+.venv
+.py*
+secrets.toml
+temp
