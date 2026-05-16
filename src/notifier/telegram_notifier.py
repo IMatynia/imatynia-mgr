@@ -31,7 +31,9 @@ class NotifierBotClient:
         return self
 
     async def __aexit__(self, exc_type, exc, tb):
-        await self.send_message("Closing notifier", force=True)
+        async with self.mutex:
+            if len(self.message_queue) > 0:
+                await self.send_message("Closing notifier", force=True)
 
     async def error(self, message: str):
         logging.error(f"NOTIFIER: {message}")

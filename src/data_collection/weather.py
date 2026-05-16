@@ -42,13 +42,10 @@ class WeatherCollector(DataCollectorBase):
                 task = tg.create_task(self.collect_single(i, x, y))
                 tasks.append(task)
 
-        # --- Post-Processing Phase ---
         results = []
         errors = []
 
         for task in tasks:
-            # Since the TaskGroup block has closed, every task is guaranteed to be finished.
-            # We can safely inspect their status.
             if task.cancelled():
                 continue
 

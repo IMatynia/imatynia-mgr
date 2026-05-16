@@ -17,3 +17,5 @@ async def test_master_downloader(
         assert len(errors) == 0
         assert len(paths) == 1
         assert paths[0].name.endswith("zip")
+        assert paths[0].exists()
+        assert not (tmp_path / "raw").exists()

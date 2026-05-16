@@ -28,8 +28,6 @@ class MasterCollector(DataCollectorBase):
         all_errors: list[Exception] = []
 
         for task in tasks:
-            # Since the TaskGroup block has closed, every task is guaranteed to be finished.
-            # We can safely inspect their status.
             if task.cancelled():
                 continue
 
@@ -42,10 +40,18 @@ class MasterCollector(DataCollectorBase):
                 all_errors.extend(errors)
 
         now = datetime.datetime.now()
+        timestamp = now.strftime("%Y-%m-%d_%H-%M-%S")
+        zip_name = f"daily_{timestamp}"
 
-        zip_name = f"daily_{now.isoformat()}"
+        target_zip_path = artifact_folder / zip_name
 
-        shutil.make_archive(zip_name, "zip", raw_folder, artifact_folder)
-        shutil.rmtree(raw_folder)
+        await asyncio.to_thread(
+            shutil.make_archive,
+            base_name=str(target_zip_path),
+            format="zip",
+            root_dir=str(raw_folder),
+        )
+
+        await asyncio.to_thread(shutil.rmtree, str(raw_folder))
 
         return [artifact_folder / f"{zip_name}.zip"], all_errors
