@@ -4,6 +4,10 @@ from pathlib import Path
 
 class DataCollectorBase(ABC):
     @abstractmethod
+    def get_name(self) -> str:
+        ...
+
+    @abstractmethod
     async def run_daily_collection(
         self, artifact_folder: Path
     ) -> tuple[list[Path], list[Exception]]:

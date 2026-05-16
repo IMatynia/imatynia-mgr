@@ -5,3 +5,5 @@ __py*
 .py*
 secrets.toml
 temp
+dataset
+configs

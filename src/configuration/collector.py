@@ -7,6 +7,6 @@ class CollectorConfig(BaseModel):
     weather_api_url: str = "https://api.met.no"
     weather_api_user_agent: str = USER_AGENT
     weather_downsample: float = 0.5
-    weather_rate_limit: int = 16
+    weather_rate_limit: int = 4
 
     area: StaticAreaDetails

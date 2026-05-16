@@ -1,4 +1,5 @@
 import asyncio
+import logging
 from pathlib import Path
 from geopandas import GeoDataFrame
 import httpx
@@ -19,6 +20,9 @@ class WeatherCollector(DataCollectorBase):
         self.notifier = notifier
         self.rate_limit = asyncio.Semaphore(config.weather_rate_limit)
 
+    def get_name(self) -> str:
+        return "Weather-data-collector"
+
     async def collect_single(self, seq, x, y) -> GeoDataFrame:
         x_max, y_max = self.config.area.grid_cell_counts
         x_frac = x / x_max
@@ -29,6 +33,7 @@ class WeatherCollector(DataCollectorBase):
         )
         async with self.rate_limit:
             try:
+                logging.info(f"Downloading weather forecast for {point} as of today")
                 return await self.weather_client.get_weather_info_at_point(point)
             except Exception as e:
                 await self.notifier.error(f"Error gathering point ({x}, {y}): {e}")
@@ -63,6 +68,11 @@ class WeatherCollector(DataCollectorBase):
 
         res, errors = await self._collect()
         path = artifact_folder / "weather.fgb"
+
+        if path.exists():
+            await self.notifier.info("Weather has already been generated!")
+            return [path], []
+
         try:
             res.to_file(path, driver="FlatGeobuf")
             return ([path], errors)

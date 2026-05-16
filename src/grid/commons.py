@@ -1,5 +1,7 @@
+from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Iterator
+from pathlib import Path
+from typing import Iterator, Self
 import numpy as np
 
 
@@ -33,7 +35,7 @@ class LayerTypes(str, Enum):
     output = "output"
 
 
-class GridLayer(GridBase):
+class GridLayer(GridBase, ABC):
     name: str
     layer_type: LayerTypes
     data: np.ndarray
@@ -45,6 +47,10 @@ class GridLayer(GridBase):
         self.layer_type = layer_type
         self.data = data
         super().__init__(w, h)
+
+    @classmethod
+    @abstractmethod
+    def from_file(cls, path: Path) -> Self: ...
 
 
 class MultilayerGrid(GridBase):
