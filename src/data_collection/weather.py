@@ -1,5 +1,6 @@
 import asyncio
-import logging
+from datetime import timedelta
+from loguru import logger
 from pathlib import Path
 from geopandas import GeoDataFrame
 import httpx
@@ -8,11 +9,11 @@ from src.configuration.collector import CollectorConfig
 from src.data_collection.collector_base import DataCollectorBase
 from src.data_sources.apis.weather_data import WeatherApiWrapper
 from src.grid.commons import iterate_grid
-from src.notifier.telegram_notifier import NotifierBotClient
+from src.notifier.telegram_notifier import Notifier
 
 
 class WeatherCollector(DataCollectorBase):
-    def __init__(self, config: CollectorConfig, notifier: NotifierBotClient) -> None:
+    def __init__(self, config: CollectorConfig, notifier: Notifier) -> None:
         self.config = config
         self.weather_client = WeatherApiWrapper(
             httpx.AsyncClient(), config.weather_api_user_agent, config.weather_api_url
@@ -22,6 +23,9 @@ class WeatherCollector(DataCollectorBase):
 
     def get_name(self) -> str:
         return "Weather-data-collector"
+
+    def collection_interval(self) -> timedelta:
+        return timedelta(days=1)
 
     async def collect_single(self, seq, x, y) -> GeoDataFrame:
         x_max, y_max = self.config.area.grid_cell_counts
@@ -33,7 +37,7 @@ class WeatherCollector(DataCollectorBase):
         )
         async with self.rate_limit:
             try:
-                logging.info(f"Downloading weather forecast for {point} as of today")
+                logger.info(f"Downloading weather forecast for {point} as of today")
                 return await self.weather_client.get_weather_info_at_point(point)
             except Exception as e:
                 await self.notifier.error(f"Error gathering point ({x}, {y}): {e}")
@@ -62,7 +66,7 @@ class WeatherCollector(DataCollectorBase):
 
         return pandas.concat(results), errors
 
-    async def run_daily_collection(
+    async def run_collection(
         self, artifact_folder: Path
     ) -> tuple[list[Path], list[Exception]]:
 

@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from src.configuration.constants import USER_AGENT
+from src.configuration.constants import SCRAPER_AGENT, USER_AGENT
 from src.schemas.static_data import StaticAreaDetails
 
 
@@ -9,4 +9,8 @@ class CollectorConfig(BaseModel):
     weather_downsample: float = 0.5
     weather_rate_limit: int = 4
 
+    scraper_user_agent: str = SCRAPER_AGENT
+
     area: StaticAreaDetails
+
+    rome_station_names: list[str] = ["Warszawa Centr."]

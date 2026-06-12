@@ -27,7 +27,7 @@ async def test_download_and_process_weather(
 ):
     async with NotifierBotClient(secrets) as notifier:
         collector = WeatherCollector(collector_config, notifier)
-        paths, errors = await collector.run_daily_collection(tmp_path)
+        paths, errors = await collector.run_collection(tmp_path)
         assert len(errors) == 0
         assert len(paths) == 1
         gdf = GeoDataFrame.from_file(paths[0])

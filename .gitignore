@@ -7,3 +7,5 @@ secrets.toml
 temp
 dataset
 configs
+.direnv
+.ruff_cache

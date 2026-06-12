@@ -16,7 +16,6 @@ def secrets() -> Secrets:
     with open(ROOT / "secrets.toml", "r") as fd:
         return Secrets.model_validate(rtoml.load(fd))
 
-
 @pytest.fixture(scope="session")
 def collector_config() -> CollectorConfig:
     return CollectorConfig(

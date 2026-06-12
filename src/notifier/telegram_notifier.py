@@ -1,6 +1,7 @@
+from abc import ABC, abstractmethod
 import asyncio
 import datetime
-import logging
+from loguru import logger
 
 import httpx
 
@@ -9,7 +10,29 @@ from src.configuration.secrets import Secrets
 TELEGRAM_API_URL = "https://api.telegram.org"
 
 
-class NotifierBotClient:
+class Notifier(ABC):
+    @abstractmethod
+    async def error(self, message: str): ...
+
+    @abstractmethod
+    async def info(self, message: str): ...
+
+    @abstractmethod
+    async def send_message(self, message: str, force: bool = False): ...
+
+
+class DummyNotifier(Notifier):
+    async def error(self, message: str):
+        logger.error(message)
+
+    async def info(self, message: str):
+        logger.info(message)
+
+    async def send_message(self, message: str, force: bool = False):
+        logger.info(message)
+
+
+class NotifierBotClient(Notifier):
     """Using telegram to send messages about the state of the web scraping / training"""
 
     def __init__(self, secrets: Secrets) -> None:
@@ -36,11 +59,11 @@ class NotifierBotClient:
                 await self.send_message("Closing notifier", force=True)
 
     async def error(self, message: str):
-        logging.error(f"NOTIFIER: {message}")
+        logger.error(f"NOTIFIER: {message}")
         await self.send_message(f"#error\n{message}")
 
     async def info(self, message: str):
-        logging.info(f"NOTIFIER: {message}")
+        logger.info(f"NOTIFIER: {message}")
         await self.send_message(f"#info\n{message}")
 
     async def send_message(self, message: str, force: bool = False):
