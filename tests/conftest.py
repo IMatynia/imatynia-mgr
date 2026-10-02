@@ -1,10 +1,11 @@
 import pytest
 import rtoml
+
 from src.configuration.collector import CollectorConfig
-from src.schemas.static_data import BoundingBox, StaticAreaDetails
 from src.configuration.constants import ROOT
-from src.configuration.secrets import Secrets
 from src.configuration.general_config import GeneralConfig
+from src.configuration.secrets import Secrets
+from src.schemas.static_data import BoundingBox, StaticAreaDetails
 
 
 def config() -> GeneralConfig:
@@ -15,6 +16,7 @@ def config() -> GeneralConfig:
 def secrets() -> Secrets:
     with open(ROOT / "secrets.toml", "r") as fd:
         return Secrets.model_validate(rtoml.load(fd))
+
 
 @pytest.fixture(scope="session")
 def collector_config() -> CollectorConfig:

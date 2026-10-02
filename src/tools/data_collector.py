@@ -1,7 +1,9 @@
 import asyncio
 from pathlib import Path
+
 import rtoml
 import typer
+
 from src.configuration.collector import CollectorConfig
 from src.configuration.secrets import Secrets
 from src.data_collection.master import MasterCollector
@@ -9,10 +11,10 @@ from src.notifier.telegram_notifier import Notifier
 
 app = typer.Typer()
 
+
 def dump_to_log_file(file: Path, errors: list[Exception]):
     with open(file, "a") as fd:
-        for error in errors:
-            fd.write(f"{error}\n\n")
+        fd.writelines(f"{error}\n\n" for error in errors)
 
 
 @app.command()

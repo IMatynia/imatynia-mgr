@@ -1,3 +1,3 @@
 ruff:
-    uvx ruff check --fix || echo "ignore"
+    -uvx ruff check --fix --unsafe-fixes
     uvx ruff format

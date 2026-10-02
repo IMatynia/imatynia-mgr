@@ -1,5 +1,7 @@
 from pathlib import Path
+
 import pytest
+
 from src.configuration.collector import CollectorConfig
 from src.configuration.secrets import Secrets
 from src.data_collection.master import MasterCollector

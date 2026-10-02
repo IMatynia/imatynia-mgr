@@ -18,4 +18,3 @@ class DataCollectorBase(ABC):
     def collection_interval(self) -> timedelta:
         """How often does the collection happen?"""
         ...
-

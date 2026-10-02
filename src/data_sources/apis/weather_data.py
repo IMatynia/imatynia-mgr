@@ -1,6 +1,6 @@
+import geopandas as gpd
 import httpx
 import shapely as shp
-import geopandas as gpd
 
 
 class WeatherApiWrapper:

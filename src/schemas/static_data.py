@@ -1,6 +1,6 @@
+import shapely as shp
 from pydantic import BaseModel
 from resultify import resultify
-import shapely as shp
 
 
 class BoundingBox(BaseModel):

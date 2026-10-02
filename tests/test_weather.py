@@ -1,12 +1,14 @@
 from pathlib import Path
-from geopandas import GeoDataFrame
+
 import httpx
 import pytest
+from geopandas import GeoDataFrame
+
 from src.configuration.collector import CollectorConfig
+from src.configuration.constants import WARSAW_POINT
 from src.configuration.secrets import Secrets
 from src.data_collection.weather import WeatherCollector
 from src.data_sources.apis.weather_data import WeatherApiWrapper
-from src.configuration.constants import WARSAW_POINT
 from src.notifier.telegram_notifier import NotifierBotClient
 
 

@@ -1,9 +1,10 @@
-from collections import deque
 import datetime
+from collections import deque
 from pathlib import Path
 from venv import logger
 
 import httpx
+
 from src.configuration.collector import CollectorConfig
 from src.data_collection.collector_base import DataCollectorBase
 from src.data_collection.util import load_from, save_to
@@ -83,7 +84,7 @@ class TrainsCollector(DataCollectorBase):
 
         dq = deque(graph.iter())
         for edge in dq:
-            if edge.time < (now + datetime.timedelta(minutes=30)).time():
+            if edge.time_start < (now + datetime.timedelta(minutes=30)).time():
                 if statistics.visited(edge):
                     continue
                 flow = await self.pkpclient.get_passenger_traffic_on_connection(edge)

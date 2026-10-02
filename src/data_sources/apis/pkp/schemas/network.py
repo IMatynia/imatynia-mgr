@@ -1,5 +1,6 @@
 import datetime
-from typing import Any, Iterator, Self
+from collections.abc import Iterator
+from typing import Self
 
 from pydantic import BaseModel
 
@@ -9,11 +10,25 @@ from src.data_sources.apis.pkp.schemas.train_connection import Train
 class RailNetworkEdge(BaseModel):
     start: int
     end: int
-    time: datetime.time
+    time_start: datetime.time
+    time_end: datetime.time
     train: Train
 
     def __hash__(self) -> int:
-        return hash((self.start, self.end, self.time.isoformat(), self.train))
+        return hash(
+            (
+                self.start,
+                self.end,
+                self.time_start.isoformat(),
+                self.time_end.isoformat(),
+                self.train,
+            )
+        )
+
+    def get_real_dates_formatted(self, date: datetime.date) -> tuple[str, str]:
+        start = datetime.datetime.combine(date, self.time_start).strftime("%Y%m%d%H%M")
+        end = datetime.datetime.combine(date, self.time_end).strftime("%Y%m%d%H%M")
+        return (start, end)
 
 
 class RailNetwork(BaseModel):

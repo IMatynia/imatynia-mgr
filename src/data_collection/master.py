@@ -1,7 +1,9 @@
 import asyncio
 import datetime
-from loguru import logger
 from pathlib import Path
+
+from loguru import logger
+
 from src.configuration.collector import CollectorConfig
 from src.data_collection.collector_base import DataCollectorBase
 from src.data_collection.weather import WeatherCollector

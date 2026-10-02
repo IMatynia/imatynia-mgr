@@ -1,9 +1,9 @@
-from abc import ABC, abstractmethod
 import asyncio
 import datetime
-from loguru import logger
+from abc import ABC, abstractmethod
 
 import httpx
+from loguru import logger
 
 from src.configuration.secrets import Secrets
 

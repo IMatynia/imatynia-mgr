@@ -1,14 +1,15 @@
 from abc import ABC, abstractmethod
+from collections.abc import Iterator
 from enum import Enum
 from pathlib import Path
-from typing import Iterator, Self
+from typing import Self
+
 import numpy as np
 
 
 def iterate_grid(w: int, h: int) -> Iterator[tuple[int, int]]:
     inner = GridBase(w, h)
-    for cell in inner.cell_iterator():
-        yield cell
+    yield from inner.cell_iterator()
 
 
 class GridBase:

@@ -10,5 +10,4 @@ class GeolocationApi:
         self.user_agent = user_agent
         self.url = api_base_url
 
-    def geolocate_by_name(self, name: str) -> Point:
-        ...
+    def geolocate_by_name(self, name: str) -> Point: ...

@@ -1,5 +1,4 @@
-import logging
-from typing import Iterator
+from collections.abc import Iterator
 
 from loguru import logger
 
@@ -39,31 +38,36 @@ class StationHelper:
 
 
 class StationsContainer:
-    stations: dict[int, StationHelper]
+    stations_id: dict[int, StationHelper]
+    stations_eva: dict[int, StationHelper]
+    stations: dict[str, StationHelper]
 
     def get_station_by_id(self, id: int) -> StationHelper | None:
-        return self.stations.get(id)
+        return self.stations_id.get(id)
 
-    def get_all_station_ids(self) -> set[int]:
-        return set(self.stations.keys())
+    def get_station_by_eva(self, id: int) -> StationHelper | None:
+        return self.stations_eva.get(id)
 
     def get_station_by_name(self, name: str) -> StationHelper | None:
-        for station in self.stations.values():
-            if station.get_name() == name:
-                return station
-        return None
+        return self.stations.get(name)
+
+    def get_all_station_ids(self) -> set[int]:
+        return set(self.stations_id.keys())
 
     def iter(self) -> Iterator[StationHelper]:
-        for s in self.stations.values():
-            yield s
+        yield from self.stations_id.values()
 
     def __init__(self, stations_data: dict) -> None:
+        self.stations_id = {}
+        self.stations_eva = {}
         self.stations = {}
         for station in stations_data["stacje"]:
             try:
                 new_station = StationHelper(station)
-                self.stations[new_station.get_id()] = new_station
+                self.stations_id[new_station.get_id()] = new_station
+                self.stations_eva[new_station.get_eva()] = new_station
+                self.stations[new_station.get_name()] = new_station
             except Exception as e:
                 logger.debug(e)
 
-        assert len(self.stations) > 10, "Stations failed to download!"
+        assert len(self.stations_id) > 10, "Stations failed to download!"

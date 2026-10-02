@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+
 from src.configuration.constants import SCRAPER_AGENT, USER_AGENT
 from src.schemas.static_data import StaticAreaDetails
 

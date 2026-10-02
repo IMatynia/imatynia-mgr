@@ -1,5 +1,7 @@
 import asyncio
+
 import pytest
+
 from src.configuration.secrets import Secrets
 from src.notifier.telegram_notifier import NotifierBotClient
 

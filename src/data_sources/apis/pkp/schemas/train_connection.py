@@ -14,9 +14,18 @@ class TrainConnection:
 
     def __init__(self, data: dict) -> None:
         self.data = data
+        self.train = Train(
+            train_cat=data["kategoriaPociagu"], train_num=data["nrPociagu"]
+        )
 
-    def get_departure(self) -> int: ...
+    def get_departure(self) -> int:
+        return self.data["stacjaWyjazdu"]
 
-    def get_destination(self) -> int: ...
+    def get_destination(self) -> int:
+        return self.data["stacjaPrzyjazdu"]
 
-    def get_train(self) -> Train: ...
+    def get_train(self) -> Train:
+        return self.train
+
+    def get_departure_time(self) -> str:
+        return self.data["dataWyjazdu"]
